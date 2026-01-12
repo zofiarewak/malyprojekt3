@@ -1,0 +1,1 @@
+#Ten plik swoim istnieniem umożliwia import funkcji z innego katalogu

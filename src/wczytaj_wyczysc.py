@@ -3,21 +3,7 @@ import requests
 import zipfile
 import io
 
-gios_archive_url = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
-gios_url_ids = {
-    2015: '236',
-    2018: '603',
-    2021: '486',
-    2024: '582'
-}
-gios_pm25_file = {
-    2015: '2015_PM2.5_1g.xlsx',
-    2018: '2018_PM2.5_1g.xlsx',
-    2021: '2021_PM2.5_1g.xlsx',
-    2024: '2024_PM25_1g.xlsx'
-}
-
-def download_gios_archive(year, gios_id, filename):
+def download_gios_archive(gios_archive_url, gios_id, filename):
     response = requests.get(f"{gios_archive_url}{gios_id}")
     response.raise_for_status()
     with zipfile.ZipFile(io.BytesIO(response.content)) as z:
