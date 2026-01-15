@@ -65,7 +65,7 @@ def multiindex_funkcja(df, metadane, wsp_stacje):
 
 def przesun_date(df):
     df = df.copy()
-    df.index = pd.to_datetime(df.index, errors="coerce",format="%Y-%m-%d %H:%M:%S.%f")
+    df.index = pd.to_datetime(df.index, errors="coerce",format="%Y-%m-%d %H:%M:%S")
     polnoc = df.index.hour == 0
     nowy_indeks = [t - pd.Timedelta(seconds=1) if h else t for t, h in zip(df.index, polnoc)]
     df.index = pd.DatetimeIndex(nowy_indeks)
