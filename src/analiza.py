@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 def srednie_miesieczne(df):
     df_pomiary = df.copy()
