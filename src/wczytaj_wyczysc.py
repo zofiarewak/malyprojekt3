@@ -8,7 +8,7 @@ def download_gios_archive(gios_archive_url:str, gios_id:str, filename:str) -> pd
     response.raise_for_status()
     with zipfile.ZipFile(io.BytesIO(response.content)) as z:
         with z.open(filename) as f:
-            df = pd.read_excel(f, header=None)
+            df = pd.read_excel(f, header=None, decimal=",")
     return df
 
 def download_metadata(gios_archive_url:str,metadata_url_id:str) -> pd.DataFrame:
