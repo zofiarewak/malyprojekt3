@@ -71,9 +71,16 @@ def przesun_date(df):
     df.index = pd.DatetimeIndex(nowy_indeks)
     return df
 
-def df_gotowy(df_list, metadane):
-    wsp_st = wspolne_stacje(df_list)
-    df_list_wsp = [df[wsp_st] for df in df_list]
+def df_gotowy(raw_df_dict, metadane):
+    """raw_df_dict - slownik z surowyni df {rok: df}"""
+
+    # sprowadzam slownik raw_data {rok:df} do listy [df] i ujednolicam każdy df
+    ujednolicone_df_list = []
+    for rok in raw_df_dict.keys():
+        ujednolicone_df_list.append(ujednolic_dane(raw_df_dict[rok], metadane))
+
+    wsp_st = wspolne_stacje(ujednolicone_df_list)
+    df_list_wsp = [df[wsp_st] for df in ujednolicone_df_list]
     df_list_multi = [multiindex_funkcja(df, metadane, wsp_st) for df in df_list_wsp]
     df_gotowe = [przesun_date(df) for df in df_list_multi]
     return pd.concat(df_gotowe)

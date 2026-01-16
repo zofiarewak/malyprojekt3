@@ -153,10 +153,10 @@ def test_df_gotowy_pipeline(raw_gios_df_1, raw_gios_df_2, metadata_df):
     """
 
     raw_data = {}
-    raw_data[2020] = ujednolic_dane(raw_gios_df_1, metadata_df)
-    raw_data[2021] = ujednolic_dane(raw_gios_df_2, metadata_df)
+    raw_data[2020] = raw_gios_df_1
+    raw_data[2021] = raw_gios_df_2
 
-    data = df_gotowy(list(raw_data.values()), metadata_df)
+    data = df_gotowy(raw_data, metadata_df)
 
     # wynik to DataFrame
     assert isinstance(data, pd.DataFrame)
