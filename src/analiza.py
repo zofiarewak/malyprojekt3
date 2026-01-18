@@ -159,3 +159,38 @@ def wybierz_stacje_max_min(ile_dni_wiecej_normy:pd.DataFrame, rok:int, ile_maxmi
     min3 = ile_dni_wiecej_normy.loc[rok].sort_values(ascending=False).tail(ile_maxmin)
     wybrane_stacje = max3.index.tolist() + min3.index.tolist()
     return wybrane_stacje, ile_dni_wiecej_normy[wybrane_stacje]
+
+def overnorm_by_voivodeship(
+        df: pd.DataFrame,
+        metadata: pd.DataFrame,
+        daily_norm: float,
+        years: list[int],
+        voivodeship_col: str = "Województwo"
+) -> pd.DataFrame:
+    """
+    Counts number of days with daily mean PM2.5 value above norm,
+    aggregated by voivodeship.
+    Returns: DataFrame (index = years, columns = voivodeships)
+    """
+
+    df_num = df.apply(pd.to_numeric, errors="coerce")
+
+    # dzienna średnia na stacje
+    daily = df_num.resample("D").mean(numeric_only=True)
+    # wartość bool dla przekroczenia średniej wartości
+    exceed = daily > daily_norm
+
+    # mapowanie każdej stacji na województwo
+    station_codes = exceed.columns.get_level_values(0)
+    station_to_voiv = metadata.set_index("Kod stacji")[voivodeship_col].to_dict()
+    voiv = pd.Series(station_codes, index=exceed.columns).map(lambda s: station_to_voiv.get(s, "Unknown"))
+    
+    # dla każdego dnia i województwa sprawdza czy była choć jedna stacja z przekroczeniem
+    exceed_voiv_day = exceed.groupby(voiv, axis=1).any()
+
+    # zlicza liczbe dni z przekroczeniem w każdym roku
+    out = exceed_voiv_day.groupby(exceed_voiv_day.index.year).sum()
+    out = out.reindex(years, fill_value=0)
+    out.index.name = "Year"
+    out.columns.name = "Voivodeship"
+    return out
