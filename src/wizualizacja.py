@@ -147,6 +147,14 @@ def wykres_przekroczenia(ile_dni_wybrane_stacje:pd.DataFrame, wybrane_stacje:lis
 def plot_exceedence_by_voivodeship(df: pd.DataFrame, daily_norm: float) -> None:
     """
     Bar chart plotting number of days with PM2.5 exceedence by voivodeship.
+    --------
+    Parameters
+        df: data frame with exceedence days grouped by voivodeship
+        daily norm: threshold of daily norm of PM2.5 value
+    --------
+    Returns
+    None
+        Shows plotted bar chart
     """
 
     ax = df.plot(kind="bar", figsize=(14, 7))
